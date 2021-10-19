@@ -20,20 +20,17 @@ public class Crop {
 	@Column(name = "start_Date")
 	private String startDate;
 
-	@OneToMany (mappedBy = "crop",fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL)
-	private List<Landslide> landslides;
 
 	public Crop() {
 
 	}
 
-	public Crop(long id, String cropName, String cropType, String startDate, List<Landslide> landslides) {
-		this.id = id;
+	public Crop( String cropName, String cropType, String startDate, List<Landslide> landslides) {
+		super();
 		this.cropName = cropName;
 		this.cropType = cropType;
 		this.startDate = startDate;
-		this.landslides = landslides;
+
 	}
 
 	public long getCrop_id() {
@@ -68,13 +65,7 @@ public class Crop {
 		this.startDate = startDate;
 	}
 
-	public List<Landslide> getLandslides() {
-		return landslides;
-	}
 
-	public void setLandslides(List landslides) {
-		this.landslides = landslides;
-	}
 
 
 }

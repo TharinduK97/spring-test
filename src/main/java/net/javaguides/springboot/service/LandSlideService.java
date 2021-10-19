@@ -2,7 +2,9 @@ package net.javaguides.springboot.service;
 
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.model.Crop;
+import net.javaguides.springboot.model.Landslide;
 import net.javaguides.springboot.repository.CropRepository;
+import net.javaguides.springboot.repository.LandSlideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,37 +20,49 @@ public class LandSlideService {
     @Autowired
     private CropRepository cropRepository;
 
-    public List<Crop> getAllCrops(){
-        return cropRepository.findAll();
-    }
-    public Crop createCrop(@RequestBody Crop crop) {
-        return cropRepository.save(crop);
-    }
+    @Autowired
+    private LandSlideRepository landSlideRepository;
 
-    public ResponseEntity<Crop> getWorkerById(@PathVariable Long id) {
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Crop not exist with id :" + id));
-        return ResponseEntity.ok(crop);
+
+    public List<Landslide> getAllLandSlides(){
+        return landSlideRepository.findAll();
     }
 
-    public ResponseEntity<Crop> updateCrop(@PathVariable Long id, @RequestBody Crop cropDetails){
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Crop not exist with id :" + id));
 
-        crop.setCropName(cropDetails.getCropName());
-        crop.setCropType(cropDetails.getCropType());
-        crop.setLandslides(cropDetails.getLandslides());
-        crop.setStartDate(cropDetails.getStartDate());
 
-        Crop updatedCrop = cropRepository.save(crop);
-        return ResponseEntity.ok(updatedCrop);
+    public Landslide createLandSlide(@PathVariable Long id,@RequestBody Landslide landslide) {
+        
+        return cropRepository.findById(id).map(crop -> {
+            landslide.setCrop(crop);
+            return landSlideRepository.save(landslide);
+        }).orElseThrow(() -> new ResourceNotFoundException("CropId " + id + " not found"));
+
     }
 
-    public ResponseEntity<Map<String, Boolean>> deleteCrop(@PathVariable Long id){
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Crop not exist with id :" + id));
 
-        cropRepository.delete(crop);
+    public ResponseEntity<Landslide> getLandslidesById(@PathVariable Long id) {
+        Landslide landslide = landSlideRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("LandSlide not exist with id :" + id));
+        return ResponseEntity.ok(landslide);
+    }
+
+    public ResponseEntity<Landslide> updateLandSlide(@PathVariable Long id, @RequestBody Landslide landslideDetails){
+        Landslide landslide = landSlideRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("LandSlide not exist with id :" + id));
+
+        landslide.setSize(landslideDetails.getSize());
+        landslide.setCrop(landslideDetails.getCrop());
+
+
+        Landslide  updatedlandslide1 = landSlideRepository.save(landslide);
+        return ResponseEntity.ok(updatedlandslide1);
+    }
+
+        public ResponseEntity<Map<String, Boolean>> deletelandSlide(@PathVariable Long id){
+        Landslide landslide = landSlideRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("LandSlide not exist with id :" + id));
+
+        landSlideRepository.delete(landslide);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);

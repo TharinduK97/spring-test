@@ -19,13 +19,15 @@ public class CropService {
     private CropRepository cropRepository;
 
     public List<Crop> getAllCrops(){
+
         return cropRepository.findAll();
+
     }
     public Crop createCrop(@RequestBody Crop crop) {
         return cropRepository.save(crop);
     }
 
-    public ResponseEntity<Crop> getWorkerById(@PathVariable Long id) {
+    public ResponseEntity<Crop> getCropById(@PathVariable Long id) {
         Crop crop = cropRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Crop not exist with id :" + id));
         return ResponseEntity.ok(crop);
@@ -37,7 +39,6 @@ public class CropService {
 
         crop.setCropName(cropDetails.getCropName());
         crop.setCropType(cropDetails.getCropType());
-        crop.setLandslides(cropDetails.getLandslides());
         crop.setStartDate(cropDetails.getStartDate());
 
         Crop updatedCrop = cropRepository.save(crop);

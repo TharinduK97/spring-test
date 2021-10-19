@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LandSlideRepository extends JpaRepository<Landslide, Long>{
-
+//    Page<Landslide> findByPostId(Long postId, Pageable pageable);
 }
